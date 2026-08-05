@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlternanceBot — Connecter ta boîte Gmail en 5 minutes</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --accent:#0e7c66;--accent-light:#e8f5f1;--accent-dark:#095c4c;
+  --bg:#f7f8fa;--card:#ffffff;--text:#1a1a2e;--muted:#5f6578;
+  --border:#dde1e8;--warn:#b26a00;--warn-bg:#fff6e5;
+  --radius:12px;--shadow:0 2px 8px rgba(0,0,0,.06);
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.65;min-height:100vh}
+
+header{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;
+  padding:2.2rem 1.5rem 1.8rem;text-align:center}
+header h1{font-size:1.7rem;font-weight:700;letter-spacing:-.5px;margin-bottom:.35rem}
+header p{font-size:1.02rem;opacity:.92;max-width:560px;margin:0 auto}
+
+.container{max-width:720px;margin:0 auto;padding:1.8rem 1rem 3rem}
+
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:1.8rem 1.7rem;margin-bottom:1.4rem;border:1px solid var(--border)}
+.card h2{font-size:1.15rem;color:var(--accent-dark);margin-bottom:.8rem;font-weight:700;
+  display:flex;align-items:center;gap:.6rem}
+.badge{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  width:2rem;height:2rem;border-radius:50%;background:var(--accent);color:#fff;
+  font-size:1rem;font-weight:700}
+.card p{margin-bottom:.7rem;font-size:.95rem}
+.card p:last-child{margin-bottom:0}
+.muted{color:var(--muted);font-size:.88rem}
+
+.steps{list-style:none;counter-reset:etape}
+.steps li{position:relative;padding:.55rem 0 .55rem 2.4rem;counter-increment:etape;
+  font-size:.95rem;border-bottom:1px dashed var(--border)}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(etape);position:absolute;left:0;top:.6rem;
+  width:1.6rem;height:1.6rem;border-radius:50%;background:var(--accent-light);
+  color:var(--accent-dark);font-weight:700;font-size:.85rem;display:flex;
+  align-items:center;justify-content:center}
+
+.lien{display:inline-block;background:var(--accent-light);border:1.5px solid var(--accent);
+  color:var(--accent-dark);font-weight:600;padding:.35rem .8rem;border-radius:8px;
+  text-decoration:none;font-size:.9rem;margin:.2rem 0;word-break:break-all}
+.lien:hover{background:var(--accent);color:#fff}
+
+.code-exemple{background:#f1f3f5;border:1.5px dashed var(--border);border-radius:8px;
+  padding:.7rem 1rem;font-family:Consolas,Menlo,monospace;font-size:1.05rem;
+  letter-spacing:.18em;text-align:center;color:var(--accent-dark);font-weight:700;margin:.6rem 0}
+
+.note{background:var(--accent-light);border-left:4px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:.8rem 1rem;font-size:.9rem;margin:.8rem 0}
+.warn{background:var(--warn-bg);border-left:4px solid var(--warn);
+  border-radius:0 8px 8px 0;padding:.8rem 1rem;font-size:.9rem;margin:.8rem 0}
+.warn strong{color:var(--warn)}
+
+.faq dt{font-weight:700;font-size:.95rem;margin-top:1rem;color:var(--accent-dark)}
+.faq dd{margin:.25rem 0 0;font-size:.92rem;color:var(--text)}
+
+footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:.82rem;
+  line-height:1.5;max-width:600px;margin:0 auto}
+@media(max-width:600px){
+  header h1{font-size:1.35rem}
+  .card{padding:1.3rem 1.1rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Connecter ta boîte Gmail</h1>
+  <p>5 minutes, une seule fois — pour que tes candidatures partent de <strong>ta</strong> boîte, en <strong>ton</strong> nom.</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>💡 Pourquoi on a besoin de ça ?</h2>
+    <p>AlternanceBot envoie tes candidatures <strong>depuis ta propre adresse Gmail</strong> :
+    les entreprises reçoivent un mail de <em>toi</em>, te répondent à <em>toi</em>, et c'est
+    exactement ce qui rend la démarche sérieuse et personnelle.</p>
+    <p>Pour ça, Google propose un système officiel et sécurisé : le
+    <strong>« mot de passe d'application »</strong> — un code spécial de 16 lettres qui autorise
+    une application à envoyer et lire des mails sur ta boîte, <strong>sans jamais donner ton
+    vrai mot de passe</strong>. Tu peux le couper à tout moment, en un clic.</p>
+    <div class="note">Conseil : si tu veux, crée une adresse dédiée à ta recherche
+    (ex&nbsp;: <strong>prenom.nom.alternance@gmail.com</strong>) — boîte propre, tri facile.
+    Dans ce cas, fais les étapes ci-dessous sur cette nouvelle adresse.</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="badge">1</span> Activer la validation en 2 étapes</h2>
+    <p class="muted">Obligatoire pour pouvoir créer un mot de passe d'application. Si c'est déjà activé chez toi, passe à l'étape 2.</p>
+    <ol class="steps">
+      <li>Ouvre <a class="lien" href="https://myaccount.google.com/security" target="_blank">myaccount.google.com/security</a> (connecté avec la boîte Gmail que tu vas utiliser).</li>
+      <li>Dans la section « Comment vous connecter à Google », clique sur <strong>« Validation en deux étapes »</strong>.</li>
+      <li>Clique sur <strong>Activer</strong> et suis les instructions (Google te demande ton numéro de téléphone).</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2><span class="badge">2</span> Créer le mot de passe d'application</h2>
+    <ol class="steps">
+      <li>Ouvre <a class="lien" href="https://myaccount.google.com/apppasswords" target="_blank">myaccount.google.com/apppasswords</a> (Google peut te redemander ton mot de passe).</li>
+      <li>Dans « Nom de l'application », tape <strong>AlternanceBot</strong> puis clique sur <strong>Créer</strong>.</li>
+      <li>Google affiche un code de 16 lettres, par exemple&nbsp;:
+        <div class="code-exemple">abcd efgh ijkl mnop</div>
+        <strong>Copie-le tout de suite</strong> (il ne sera plus jamais affiché — pas grave si tu le perds : on en recrée un en 30 secondes).</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2><span class="badge">3</span> Nous le transmettre</h2>
+    <ol class="steps">
+      <li>Envoie ton <strong>dossier</strong> (le fichier téléchargé depuis le formulaire) à ton contact AlternanceBot.</li>
+      <li>Envoie le <strong>code de 16 lettres</strong> par un autre canal si possible (ex&nbsp;: dossier par mail, code par SMS/WhatsApp). C'est une bonne habitude de sécurité.</li>
+    </ol>
+    <p style="margin-top:.8rem">C'est tout ! On configure ta campagne et on te montre les premiers
+    mails <strong>avant</strong> tout envoi réel.</p>
+  </div>
+
+  <div class="card">
+    <h2>🔒 Sécurité — ce qu'il faut savoir</h2>
+    <dl class="faq">
+      <dt>Qu'est-ce que ce code permet, exactement ?</dt>
+      <dd>D'envoyer des mails depuis ta boîte et de lire les réponses (c'est comme ça qu'on
+      détecte « cette entreprise t'a répondu, on arrête de la relancer, rappelle-la ! »).</dd>
+      <dt>Et qu'est-ce qu'il ne permet PAS ?</dt>
+      <dd>Changer ton mot de passe, accéder à ton compte Google, tes photos, ton Drive, ou
+      quoi que ce soit d'autre que le courrier.</dd>
+      <dt>Comment couper l'accès ?</dt>
+      <dd>Retourne sur <a class="lien" href="https://myaccount.google.com/apppasswords" target="_blank">myaccount.google.com/apppasswords</a>
+      et supprime « AlternanceBot ». Effet immédiat, à tout moment, sans nous demander.</dd>
+      <dt>Pourquoi pas un simple partage de mot de passe ?</dt>
+      <dd>Jamais. Ton vrai mot de passe ne doit être connu de personne — le mot de passe
+      d'application existe précisément pour ça.</dd>
+    </dl>
+    <div class="warn"><strong>Important :</strong> pendant ta campagne, ne supprime pas le code
+    et préviens-nous avant de changer ton mot de passe Google (ça désactive les codes
+    d'application) — sinon les envois s'arrêtent sans prévenir.</div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>Protection de tes données</strong><br>
+  Ton code d'application n'est utilisé que pour ta campagne de candidatures, jamais partagé,
+  et supprimé de nos systèmes dès la fin de ta recherche. Tu peux le révoquer à tout moment.
+</footer>
+
+</body>
+</html>
