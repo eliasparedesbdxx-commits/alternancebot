@@ -1,4 +1,9 @@
-<title>AlternanceBot — Ton agent personnel pour trouver ton alternance</title>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>On postule — Ton agent personnel pour trouver ton alternance</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -95,10 +100,11 @@ footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:.82rem;line
   .btn{width:100%;text-align:center}
 }
 </style>
-
+</head>
+<body>
 
 <header>
-  <h1>AlternanceBot</h1>
+  <h1>On postule</h1>
   <p>Ton agent personnel pour trouver ton alternance</p>
 </header>
 
@@ -400,20 +406,10 @@ footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:.82rem;line
     </div>
 
     <div style="margin-top:1.5rem">
-      <button class="btn btn-download" onclick="downloadDossier()">&#9989; Terminer mon dossier</button>
+      <button class="btn btn-download" onclick="downloadDossier()">&#x1F4E5; T&#233;l&#233;charger mon dossier</button>
     </div>
-    <div id="fallbackZone" style="display:none;margin-top:1rem">
-      <div class="success-banner visible">
-        <p>Ton dossier est pr&#234;t ! Deux petites &#233;tapes :<br>
-        1&#65039;&#8419; Clique &#171;&#160;Copier mon dossier&#160;&#187; puis <strong>colle-le dans un mail ou WhatsApp</strong> &#224; ton contact AlternanceBot.<br>
-        2&#65039;&#8419; <strong>Joins ton CV (le PDF)</strong> au m&#234;me message.</p>
-      </div>
-      <button class="btn btn-download" onclick="copierDossier()">&#128203; Copier mon dossier</button>
-      <p class="hint" id="copieStatus" style="margin-top:.5rem;font-weight:600"></p>
-      <textarea id="fallbackText" readonly style="margin-top:.5rem;height:110px;font-family:monospace;font-size:.72rem"></textarea>
-      <p class="hint" style="margin-top:.8rem">Sur ordinateur, tu peux aussi essayer de
-      <a href="#" onclick="telechargerComplet();return false">t&#233;l&#233;charger le fichier complet</a>
-      (CV inclus) et l'envoyer en pi&#232;ce jointe &#8212; si rien ne se t&#233;l&#233;charge, la m&#233;thode copier/coller ci-dessus suffit.</p>
+    <div class="success-banner" id="successBanner">
+      <p>Ton dossier a bien &#233;t&#233; t&#233;l&#233;charg&#233; !<br>Envoie-le <strong>par mail</strong> &#224; ton contact chez On postule pour lancer ta campagne.</p>
     </div>
   </div>
 </div>
@@ -421,7 +417,7 @@ footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:.82rem;line
 <footer>
   <strong>Protection de tes donn&#233;es</strong><br>
   Tes donn&#233;es ne servent qu'&#224; ta recherche d'alternance et ne sont jamais revendues.
-  Tu peux demander leur suppression &#224; tout moment en contactant l'&#233;quipe AlternanceBot.
+  Tu peux demander leur suppression &#224; tout moment en contactant l'&#233;quipe On postule.
 </footer>
 
 <script>
@@ -609,61 +605,20 @@ function downloadDossier() {
     commentaire_libre: val('commentaire_libre')
   };
 
-  // Deux versions du dossier :
-  // - complète (CV inclus en base64) pour le téléchargement fichier (ordinateur)
-  // - légère (sans le CV, qui sera joint en pièce jointe) pour le copier-coller
-  dossierCompletJson = JSON.stringify(dossier, null, 2);
-  var leger = JSON.parse(dossierCompletJson);
-  leger.parcours.cv_pdf_base64 = '';
-  leger.parcours.cv_a_joindre = true;   // le CV arrive en pièce jointe du message
-  var jsonLeger = JSON.stringify(leger, null, 2);
-
-  var zone = document.getElementById('fallbackZone');
-  zone.style.display = 'block';
-  document.getElementById('fallbackText').value = jsonLeger;
-  zone.scrollIntoView({behavior: 'smooth'});
-}
-
-var dossierCompletJson = '';
-
-function telechargerComplet() {
-  if (!dossierCompletJson) return;
+  var json = JSON.stringify(dossier, null, 2);
+  var blob = new Blob([json], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
   var prenom = val('prenom').toLowerCase().replace(/[^a-z0-9à-ÿ]/g, '');
   var nom = val('nom').toLowerCase().replace(/[^a-z0-9à-ÿ]/g, '');
-  try {
-    var blob = new Blob([dossierCompletJson], {type: 'application/json'});
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = 'dossier-' + prenom + '-' + nom + '.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
-  } catch (e) {
-    document.getElementById('copieStatus').textContent =
-      'Le téléchargement est bloqué ici — utilise le bouton Copier, ça marche pareil.';
-  }
-}
+  a.href = url;
+  a.download = 'dossier-' + prenom + '-' + nom + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 
-function copierDossier() {
-  var ta = document.getElementById('fallbackText');
-  ta.select();
-  ta.setSelectionRange(0, ta.value.length);
-  function fini() {
-    document.getElementById('copieStatus').textContent =
-      '✓ Copié ! Colle-le dans un mail ou WhatsApp — et n\'oublie pas ton CV en pièce jointe.';
-  }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(ta.value).then(fini, function() {
-      try { document.execCommand('copy'); fini(); } catch (e) {}
-    });
-  } else {
-    try { document.execCommand('copy'); fini(); } catch (e) {
-      document.getElementById('copieStatus').textContent =
-        'Sélectionne tout le texte ci-dessus (Ctrl+A) puis copie-le (Ctrl+C) dans un mail.';
-    }
-  }
+  document.getElementById('successBanner').classList.add('visible');
 }
 
 document.addEventListener('keydown', function(e) {
@@ -680,3 +635,5 @@ for (var i = 0; i < inputs.length; i++) {
   });
 }
 </script>
+</body>
+</html>
